@@ -1,0 +1,16 @@
+<h2>Espacios Academicos Disponibles</h2>
+
+<!-- MOSTRAR LA CANTIDAD DE ESPACIOS DISPONIBLES -->
+<h3 style="color: #0056b3;">Espacios disponibles: {{ cantidadDisponibles }}</h3>
+
+<div class="contenedor">
+    @for (espacio of espacios; track espacio.id) {
+        <app-espacio-card [espacio]="espacio" (espacioSeleccionado)="seleccionarEspaco($event)">
+        </app-espacio-card>
+    }
+</div>
+
+@if (espacioSeleccionado){
+    <app-reserva-form [espacio]="espacioSeleccionado"></app-reserva-form>
+}
+

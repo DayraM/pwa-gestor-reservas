@@ -1,0 +1,17 @@
+<div class="resumen">
+    <h2>Resumen de reserva</h2>
+
+    @if (reserva$ | async; as reserva) {
+        <p><strong>Espacio: </strong> {{ reserva.espacio }} </p>
+        <p><strong>Responsable: </strong> {{ reserva.responsable}}</p>
+        <p><strong>Carrera: </strong> {{ reserva.carrera }}</p>
+        <p><strong>Fecha: </strong> {{ reserva.fecha}}</p>
+        <p><strong>Hora: </strong> {{ reserva.hora}}</p>
+
+        <button (click)="cancelarReserva()">Cancelar reserva</button>
+    }@else {
+        <p>No existe una reserva registrada</p>
+    }
+</div>
+
+

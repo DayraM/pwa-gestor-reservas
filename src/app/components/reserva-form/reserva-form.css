@@ -1,0 +1,60 @@
+.formulario {
+    margin-top: 30px;
+    padding: 25px;
+    border: none;
+    border-radius: 12px;
+    background-color: #ffffff;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    max-width: 450px;
+}
+
+label { 
+    display: block; margin-top: 15px; font-weight: bold; color: #444; 
+}
+
+input {
+    width: 100%;
+    box-sizing: border-box; /* Para que el padding no desborde */
+    padding: 10px;
+    margin-top: 6px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+input:focus {
+    outline: none;
+    border-color: #0d6efd;
+    box-shadow: 0 0 5px rgba(13,110,253,.5);
+}
+
+.botones-container {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+button {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    flex: 1; /* Hacemos que los botones ocupen el mismo ancho */
+}
+
+.btn-guardar { 
+    background-color: #198754; color: white; 
+}
+
+.btn-guardar:hover { 
+    background-color: #157347; 
+}
+
+.btn-limpiar { 
+    background-color: #6c757d; color: white; 
+}
+
+.btn-limpiar:hover { 
+    background-color: #5c636a; 
+}
