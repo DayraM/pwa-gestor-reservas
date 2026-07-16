@@ -1,9 +1,7 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { EspacioModel } from '../../models/espacio.model';
 import { ReservaService } from '../../services/reserva-service';
 import { FormsModule } from '@angular/forms';
-import { IndexedDb } from '../../services/indexed-db';
-
 
 @Component({
   selector: 'app-reserva-form',
@@ -11,64 +9,56 @@ import { IndexedDb } from '../../services/indexed-db';
   templateUrl: './reserva-form.html',
   styleUrl: './reserva-form.css',
 })
-export class ReservaForm {
-
+export class ReservaForm implements OnInit {
   @Input() espacio!: EspacioModel;
 
   responsable = '';
-  carrera = ''; // <-- NUEVO CAMPO AGREGADO
+  carrera = '';
   fecha = '';
   hora = '';
 
-  constructor(
-    private reservaService: ReservaService,
-    private db: IndexedDb
-  ){}
+  constructor(private reservaService: ReservaService) {}
 
-  guardarReserva(): void{
-    // LITERAL G: NUEVAS VALIDACIONES ESPECÍFICAS
-    if(!this.fecha || !this.hora){
+  // 1. LEER DE LOCAL STORAGE AL INICIAR
+  ngOnInit(): void {
+    const nombreGuardado = localStorage.getItem('pref_responsable');
+    const carreraGuardada = localStorage.getItem('pref_carrera');
+    
+    if (nombreGuardado) {
+      this.responsable = nombreGuardado;
+    }
+    if (carreraGuardada) {
+      this.carrera = carreraGuardada;
+    }
+  }
+
+  guardarReserva(): void {
+    if (!this.fecha || !this.hora) {
       alert('La fecha y la hora no pueden estar vacías.');
       return;
     }
-
-    const nuevaReserva = {
-      espacio: this.espacio.nombre,
-      responsable: this.responsable,
-      carrera: this.carrera,
-      fecha: this.fecha,
-      hora: this.hora,
-      fechaRegistro: new Date().toISOString() // Fecha de creacion
-    }
-
-    // Se envia al servidor
-    this.reservaService.registrarReserva(nuevaReserva);
-
-    // Se guarda localmente
-    this.db.guardarReserva(nuevaReserva);
-    alert('Reserva guardada exitosamente')
-
-    if(!this.responsable || this.responsable.length < 3){
+    if (!this.responsable || this.responsable.length < 3) {
       alert('El nombre del responsable debe tener al menos 3 caracteres.');
       return;
     }
-
-    if(!this.carrera){
+    if (!this.carrera) {
       alert('El campo de carrera es obligatorio.');
       return;
     }
 
-    // SI PASA LAS VALIDACIONES, SE GUARDA LA RESERVA
+    // 2. GUARDAR EN LOCAL STORAGE LAS PREFERENCIAS
+    localStorage.setItem('pref_responsable', this.responsable);
+    localStorage.setItem('pref_carrera', this.carrera);
+
     this.reservaService.registrarReserva({
       espacio: this.espacio.nombre,
       responsable: this.responsable,
-      carrera: this.carrera, 
+      carrera: this.carrera,
       fecha: this.fecha,
       hora: this.hora
-    })
+    });
 
-    this.responsable = '';
-    this.carrera = ''; 
+    // Limpiamos solo fecha y hora, conservamos los datos del usuario
     this.fecha = '';
     this.hora = '';
   }
@@ -80,6 +70,3 @@ export class ReservaForm {
     this.hora = '';
   }
 }
-
-
-
