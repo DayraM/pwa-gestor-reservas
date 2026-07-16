@@ -2,6 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { EspacioModel } from '../../models/espacio.model';
 import { ReservaService } from '../../services/reserva-service';
 import { FormsModule } from '@angular/forms';
+import { IndexedDb } from '../../services/indexed-db';
 
 @Component({
   selector: 'app-reserva-form',
@@ -17,7 +18,7 @@ export class ReservaForm implements OnInit {
   fecha = '';
   hora = '';
 
-  constructor(private reservaService: ReservaService) {}
+  constructor(private reservaService: ReservaService, private db: IndexedDb) {}
 
   // 1. LEER DE LOCAL STORAGE AL INICIAR
   ngOnInit(): void {
@@ -49,6 +50,20 @@ export class ReservaForm implements OnInit {
     // 2. GUARDAR EN LOCAL STORAGE LAS PREFERENCIAS
     localStorage.setItem('pref_responsable', this.responsable);
     localStorage.setItem('pref_carrera', this.carrera);
+
+    const nuevaReserva = {
+      espacio: this.espacio.nombre,
+      responsable: this.responsable,
+      carrera: this.carrera,
+      fecha: this.fecha,
+      hora: this.hora,
+      fechaRegistro: new Date().toISOString() // Añadí esto como buena práctica
+    };
+
+    this.reservaService.registrarReserva(nuevaReserva);
+
+    this.db.guardarReserva(nuevaReserva);
+    alert('Reserva guardada exitosamente');
 
     this.reservaService.registrarReserva({
       espacio: this.espacio.nombre,
